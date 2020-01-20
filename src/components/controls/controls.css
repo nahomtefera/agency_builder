@@ -1,0 +1,29 @@
+.controls-container  {
+  height: 60px;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.controls-option {
+  text-align: center;
+  height: 60px;
+  line-height: 60px;
+  flex-grow: 1;
+  background: #fafafa;
+  color: #444;
+  font-weight: 500;
+  font-family: sans-serif;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-bottom: none;
+}
+
+.controls-option:last-child, .controls-option:first-child {
+  border: none;
+}

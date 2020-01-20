@@ -1,0 +1,65 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica;
+}
+.function-button {
+  border-radius: 20px;
+  display: inline-block;
+  padding: 10px 30px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.function-button:last-of-type {
+  margin-right: 0;
+}
+.tool-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+.component-container {
+  /* border: 1px solid blue; */
+}
+.component-section {
+  background-color: #f1f1f1;
+  padding: 20px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+  drop-shadow: 2px 5px 10px rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+.component-section.draggable-component.is-pointer-down {
+  background-color: #fafafa;
+  transition: background-color 0.3s;
+  opacity: 0.7;
+  z-index: 2;
+}
+.component-section.draggable-component .drag-icon:focus, .component-section.draggable-component .drag-icon:hover {
+  opacity: 1;
+}
+.drag-icon {
+  margin-right: 20px;
+  opacity: 0.4;
+  cursor: move;
+}
+.drag-icon svg, .drag-icon path {
+  pointer-events: none;
+}
+.lock-icon {
+  margin-right: 20px;
+  opacity: 0.2;
+}
+.functions-container {
+  margin-top: 30px;
+}
+.submit {
+  background-color: dodgerblue;
+  color: #fff;
+}
+.reset {
+  border: 2px solid dodgerblue;
+  color: dodgerblue;
+}

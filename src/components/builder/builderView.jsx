@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import './App.css';
-import Builder from './components/builder/builder'
+import './builder.css';
 
-class App extends Component {
+class BuilderView extends Component {
   constructor(props) {
     super(props);
     this.state = {  }
@@ -10,10 +9,9 @@ class App extends Component {
   render() { 
     return ( 
       <Fragment>
-        <Builder />
       </Fragment>
      );
   }
 }
  
-export default App;
+export default BuilderView;
