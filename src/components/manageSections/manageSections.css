@@ -17,6 +17,8 @@ html, body {
   max-width: 900px;
   margin: 40px auto;
   padding: 0 20px;
+  /* prevent scroll refresh on mobile chrome */
+  overscroll-behavior: none
 }
 .component-container {
   /* border: 1px solid blue; */
