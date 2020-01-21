@@ -3,12 +3,15 @@ html, body {
   padding: 0;
   font-family: Arial, Helvetica;
 }
+html{touch-action:pan-down!important}
+
 .function-button {
   border-radius: 20px;
   display: inline-block;
   padding: 10px 30px;
   cursor: pointer;
   margin-right: 10px;
+  overscroll-behavior: contain
 }
 .function-button:last-of-type {
   margin-right: 0;
@@ -18,11 +21,14 @@ html, body {
   margin: 40px auto;
   padding: 0 20px;
   /* prevent scroll refresh on mobile chrome */
-  overscroll-behavior: none
+  overscroll-behavior: contain
 }
 .component-container {
   /* border: 1px solid blue; */
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 .component-section {
   position: relative;
@@ -35,12 +41,17 @@ html, body {
   align-items: center;
   transition: background-color 0.3s;
   top: 0px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .component-section.draggable-component.is-pointer-down {
   background-color: #fafafa;
   transition: background-color 0.3s;
   opacity: 0.7;
   z-index: 2;
+}
+.component-section .title {
+  text-transform: capitalize;
 }
 .component-section.draggable-component .drag-icon:focus, .component-section.draggable-component .drag-icon:hover {
   opacity: 1;
