@@ -4,27 +4,37 @@ import './manageSections.css';
 class ManageSections extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      sections: [{title: 'hero', positionYStart:'', positionYEnd: ''}, {title: 'menu', positionYStart:'', positionYEnd: ''}, {title: 'slideshow', positionYStart:'', positionYEnd: ''}, {title: 'contact', positionYStart:'', positionYEnd: ''}, {title: 'about', positionYStart:'', positionYEnd: ''}]
+    this.state = {
+      sections: [
+        {title: 'hero', positionYStart:'', positionYEnd: ''},
+        {title: 'menu', positionYStart:'', positionYEnd: ''},
+        {title: 'slideshow', positionYStart:'', positionYEnd: ''},
+        {title: 'contact', positionYStart:'', positionYEnd: ''},
+        {title: 'about', positionYStart:'', positionYEnd: ''}
+      ],
+      tempSections: []
     }
 
     this.cancel = this.cancel.bind(this);
+    this.save = this.save.bind(this);
+    this.reset = this.reset.bind(this);
     this.dragStart = this.dragStart.bind(this);
     this.dropped = this.dropped.bind(this);
     this.touchMove = this.touchMove.bind(this);
     this.touchStarts = this.touchStarts.bind(this);
     this.updatePositionStartAndEnd = this.updatePositionStartAndEnd.bind(this);
+    this.state.tempSections = this.state.sections;
   }
-  
+
   updatePositionStartAndEnd() {
     let items = document.querySelectorAll('.component-section');
-    let updatedPositions = this.state.sections;
+    let updatedPositions = this.state.tempSections;
 
     items.forEach(section => {
       let sectionIndex = section.dataset.position;
-      let viewPortOffset = section.getBoundingClientRect()
-      let positionYStart = viewPortOffset.top;
-      let positionYEnd = viewPortOffset.bottom;
+      let sectionRect = section.getBoundingClientRect()
+      let positionYStart = sectionRect.top;
+      let positionYEnd = sectionRect.bottom;
 
       updatedPositions[sectionIndex].positionYStart = positionYStart;
       updatedPositions[sectionIndex].positionYEnd = positionYEnd;
@@ -32,26 +42,28 @@ class ManageSections extends Component {
     //  console.log('sectionIndex: ', sectionIndex, 'positionYStart: ', positionYStart, "positionYEnd", positionYEnd)
     })
 
-    this.setState({sections: updatedPositions})
+    this.setState({tempSections: updatedPositions})
   }
   componentDidMount() {
     this.updatePositionStartAndEnd()
   }
   dragStart(e) {
-    let index = e.target.dataset.position; // get position on dragged item 
+    let index = e.target.dataset.position; // get position on dragged item
     e.dataTransfer.setData("text/plain", index); // add the position to datatransfer
+
   }
   dropped(e) {
     e.preventDefault()
     let oldIndex = e.dataTransfer.getData("text/plain"); // get position from element being dragged
     let newIndex = e.target.dataset.position; // get position of element being targeted
     // Get sections array and make the swap from old position to new position
-    let updatedSections = this.state.sections;
+    let updatedSections = this.state.tempSections;
     let temp = updatedSections[oldIndex];
+
     updatedSections[oldIndex] = updatedSections[newIndex];
     updatedSections[newIndex] = temp;
     // Set new positions
-    this.setState({sections: updatedSections})
+    this.setState({tempSections: updatedSections});
   }
 
   touchStarts(e) {
@@ -83,13 +95,13 @@ class ManageSections extends Component {
       }
     }
     if(touchPosition == elementPosition) {return}
-    
+
   }
   touchEnd(e) {
     e.preventDefault()
     e.persist()
     let endPosition = e.target.parentElement.getBoundingClientRect().y + e.target.parentElement.offsetHeight;
-    let updatedSections = this.state.sections;
+    let updatedSections = this.state.tempSections;
     let oldIndex, newIndex;
 
     oldIndex = e.target.dataset.position;
@@ -105,7 +117,7 @@ class ManageSections extends Component {
         console.log('oldindex: ', oldIndex, 'newIndex: ', newIndex)
       }
     })
-    this.setState({sections: updatedSections}, ()=>{
+    this.setState({tempSections: updatedSections}, ()=>{
       e.target.parentElement.style.top = 0;
       e.target.parentElement.style.zIndex = 1;
       e.target.parentElement.style.boxShadow = 'none';
@@ -113,23 +125,43 @@ class ManageSections extends Component {
     })
   }
 
+  save() {
+    // save out sections
+    this.setState({sections: this.state.tempSections});
+    document.querySelector('.output-container').classList.add('active');
+    let title = document.querySelector('.output-title');
+    let output = document.querySelector('.output');
+    title.innerHTML = 'Your Components have been saved. Please send the code below to your developer:';
+    output.innerHTML = JSON.stringify(this.state.sections);
+  }
+
+  reset() {
+    // reset to last saved sections
+    this.setState({tempSections: this.state.sections}); // TODO: this should only update the tempSections
+    document.querySelector('.output-container').classList.remove('active');
+    let title = document.querySelector('.output-title');
+    let output = document.querySelector('.output');
+    title.innerHTML = '';
+    output.innerHTML = '';
+  }
+
   cancel(e) {
     e.stopPropagation();
     e.preventDefault();
   }
 
-  render() { 
-    return ( 
+  render() {
+    return (
       <Fragment>
         <div className="tool-container">
           <h1>Rearrange your sections</h1>
           <div className="component-container">
             {
-              this.state.sections.map( (section, index) => {
+              this.state.tempSections.map( (section, index) => {
                 return (
                   <div data-position={index} className='component-section draggable-component' key={index}
                     style={{order: index}}
-                    draggable='true' 
+                    draggable='true'
                     onDragStart={(e)=>{this.dragStart(e)}}
                     onDrop={(e)=>{this.dropped(e)}}
                     onDragOver={(e)=>{this.cancel(e)}}
@@ -148,13 +180,17 @@ class ManageSections extends Component {
             }
           </div>
           <div className="functions-container">
-            <div className="function-button submit">Save</div>
-            <div className="function-button reset">Reset</div>
+            <div className="function-button submit" onClick={this.save}>Save</div>
+            <div className="function-button reset" onClick={this.reset}>Reset</div>
+          </div>
+          <div className="output-container">
+            <div className="output-title"></div>
+            <code className="output"></code>
           </div>
         </div>
       </Fragment>
      );
   }
 }
- 
+
 export default ManageSections;

@@ -79,3 +79,24 @@ html{touch-action:pan-down!important}
   border: 2px solid dodgerblue;
   color: dodgerblue;
 }
+.output-container {
+  padding-bottom: 60px;
+  display: none;
+}
+.output-container.active {
+  display: block;
+}
+.output-title {
+  font-size: 18px;
+  margin-top: 60px;
+  font-weight: bold;
+}
+.output {
+  padding: 16px;
+  background-color: #fafafa;
+  margin-top: 20px;
+  line-height: 1.5;
+  display: block;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
